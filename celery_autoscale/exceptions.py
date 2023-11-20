@@ -1,0 +1,2 @@
+class UnknownAWSServiceException(Exception):
+    pass

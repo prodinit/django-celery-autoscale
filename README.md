@@ -1,12 +1,15 @@
-# Heading
+# Django celery autoscale
+
+Django application to scale celery workers based on number of tasks in redis queues.
 
 
 ## Intro
-As your web application scales, you will often encounter different reasons to keep track of IP Addresses. Perhaps, you just rolled out an Advert application and need to track visits and interactions in the back-end; perhaps, an 'evil' IP address continously pesters your endpoints without provocation and you'd like to implement a blacklist; better still, you need to track visitors across web pages on a 'IP' basis rather than just sessions.
 
-Or perhaps, you have this biting need to have fun and fill production DBs with IP adresses whether you need it or not.
+The message queues have variable amount of load and needs a auto scaling solution, the default and common metrics you have is CPU utilisation and memory utilisation. Unfortunately these metrics are not the best auto scaling solution in case of variable load.
 
-This application is a quite simple and effective solution to that.
+This django package scales the workers based on the load in queues, instead of running bigger instances and save cost as well.
+
+
 
 ### How to do?
 It's quite simple to use. Install with:
@@ -20,3 +23,42 @@ INSTALLED_APPS = [
     'celery_autoscale',
 ]
 ```
+
+Next step is to add `CELERY_QUEUES` and `CELERY_BROKER_URL` in your django settings.
+```
+from kombu import Queue
+
+CELERY_QUEUES = (
+    Queue('default'),
+    Queue('queue1'),
+    Queue('queue2'),
+)
+CELERY_BROKER_URL = ""
+```
+
+Next step is to add a few AWS config variables in your django settings.
+```
+CLUSTER_NAME = ''
+SERVICE_NAME = ''
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
+AWS_DEFAULT_REGION = ''
+```
+
+## Dependencies
+- Python
+- Django
+- Redis
+- Boto3
+- AWS ECS
+- Celery
+
+## How to customize it?
+
+Well, fork it, clone it, make necessary changes as per your application architecture, use it.
+
+## Bugs?
+Raise an issue, I'll check it out.
+
+## Contributions?
+Oh well... Make a PR
